@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "689788917717",
+    "firebase_url": "https://ticaccio-60260.firebaseio.com",
+    "project_id": "ticaccio-60260",
+    "storage_bucket": "ticaccio-60260.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689788917717:android:8a888126a81bd2fd",
+        "android_client_info": {
+          "package_name": "hunting.trevisanzeno.ch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689788917717-84anopaitakccm7m6vecrer4bh4vacce.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "hunting.trevisanzeno.ch",
+            "certificate_hash": "e16918c103504b3b14a435e6c265ae5ddb8559ae"
+          }
+        },
+        {
+          "client_id": "689788917717-87teb4nnm45nbo61j1ib8osvh5ab48a8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCoJlyCLMS6WhL28eShjpJbBom-hCs2LbE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "689788917717-87teb4nnm45nbo61j1ib8osvh5ab48a8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

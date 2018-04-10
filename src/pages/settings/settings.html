@@ -1,0 +1,92 @@
+<ion-content padding>
+  <!-- Emergency SMS !-->
+  <ion-item>
+    <ion-label>Emergency SMS</ion-label>
+    <ion-toggle checked="false"  [(ngModel)]="showMsgOptions" (ionChange)="showMessageOptions()"></ion-toggle>
+  </ion-item>
+
+  <ion-list *ngIf="showMsgOptions">
+    <ion-item>
+      <ion-input type="text" placeholder="Message" id="messageBody" [(ngModel)]="emergencySMS.message"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="text" placeholder="Number" [(ngModel)]="emergencySMS.number"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-grid *ngIf="showMsgOptions">
+    <ion-row>
+      <ion-col col-9>
+        <ion-item>
+          <ion-label>Send GPS coord</ion-label>
+          <ion-checkbox disabled="false" color="green" [(ngModel)]="emergencySMS.enableGPS"></ion-checkbox>
+        </ion-item>
+      </ion-col>
+      <ion-col col-3>
+        <button ion-button color="secondary" outline (click)="loadNotification()">Save</button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <!-- PinPoint !-->
+  <ion-item>
+    <ion-label>Share and Import PinPoint</ion-label>
+  </ion-item>
+  <ion-grid>
+      <ion-row>
+        <ion-col col-8>
+          <ion-item>
+              <ion-input type="text" placeholder="Insert ID" [(ngModel)]="import_marker"></ion-input>
+          </ion-item>
+        </ion-col>
+        <ion-col col-4>
+          <button ion-button color="secondary" outline (click)="importMarkers()">Import</button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col col-9>
+              <button ion-button color="secondary" outline (click)="exportPinPoint()">Export PinPoint</button>
+              <ion-input type="text" [(ngModel)]="export_id"></ion-input>
+          </ion-col>
+      </ion-row>
+    </ion-grid>
+
+  <!-- Battery Savings !-->
+  <ion-item>
+      <ion-label>Manually modify frequencies</ion-label>
+      <ion-toggle checked="false" [(ngModel)]="showFreqOptions" (ionChange)="showFrequenciesOptions()"></ion-toggle>
+  </ion-item>
+  <ion-grid *ngIf="showFreqOptions">
+      <ion-row>
+          <ion-col col-12>
+              <ion-label>Background Frequency</ion-label>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+              <ion-input type="number" placeholder="Freq in seconds" [(ngModel)]="bgFreq" (ionChange)="bgChange()" ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+          <ion-col col-12>
+              <ion-label>Foreground Frequency</ion-label>
+          </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col col-12>
+          <ion-item>
+              <ion-input type="number" placeholder="Freq in seconds" [(ngModel)]="fgFreq" (ionChange)="fgChange()"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <!-- Enable meteo alert on your location !-->
+    <ion-item>
+        <ion-label>Meteo alert</ion-label>
+        <ion-toggle checked="false"></ion-toggle>
+      </ion-item>
+</ion-content>

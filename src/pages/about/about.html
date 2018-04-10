@@ -7,5 +7,9 @@
 </ion-header>
 
 <ion-content padding>
+  <!-- <h3>Current Latitude: {{locationTracker.lat}}</h3>
+  <h3>Current Longitude: {{locationTracker.lng}}</h3> -->
 
+  <button ion-button full primary (click)="startTracking()">Start Tracking</button>
+<button ion-button full primary (click)="stopTracking()">Stop Tracking</button>
 </ion-content>

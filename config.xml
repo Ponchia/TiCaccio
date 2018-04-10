@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.ionic.starter" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="hunting.trevisanzeno.ch" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>ticaccio</name>
     <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="zeno.trevisan@gmail.com" href="http://trevisanzeno.ch/">Trevisan Zeno</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -81,4 +81,28 @@
     <plugin name="cordova-plugin-splashscreen" spec="^5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^1.1.16" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <allow-navigation href="http://192.168.1.100:8100" />
+    <plugin name="cordova-plugin-vibration" spec="^3.0.1" />
+    <plugin name="cordova-plugin-geolocation" spec="^4.0.1">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value="To locate you" />
+    </plugin>
+    <plugin name="cordova-plugin-mauron85-background-geolocation" spec="^2.3.3">
+        <variable name="GOOGLE_PLAY_SERVICES_VERSION" value="+" />
+        <variable name="ICON" value="@mipmap/icon" />
+        <variable name="SMALL_ICON" value="@mipmap/icon" />
+        <variable name="ACCOUNT_NAME" value="@string/app_name" />
+        <variable name="ACCOUNT_LABEL" value="@string/app_name" />
+        <variable name="ACCOUNT_TYPE" value="$PACKAGE_NAME.account" />
+        <variable name="CONTENT_AUTHORITY" value="$PACKAGE_NAME" />
+    </plugin>
+    <plugin name="cordova-plugin-nativeaudio" spec="^3.0.9" />
+    <plugin name="cordova-sqlite-storage" spec="^2.3.0" />
+    <plugin name="cordova-plugin-local-notification" spec="^0.9.0-beta.2" />
+    <allow-navigation href="http://192.168.43.205:8100" />
+    <plugin name="cordova-sms-plugin" spec="^0.1.11" />
+    <engine name="android" spec="~7.0.0" />
+    <engine name="ios" spec="~4.5.4" />
+    <plugin name="cordova-android-support-gradle-release" spec="^1.2.0">
+        <variable name="ANDROID_SUPPORT_VERSION" value="26.+" />
+    </plugin>
 </widget>

@@ -1,0 +1,28 @@
+page-map {
+    .scroll-content{
+        padding: 0px !important;
+    }
+}
+
+.scroll-content{
+    padding: 0px !important;
+}
+
+#currentPosition{
+    border: 3px solid #b3ff00;
+}
+
+.gps_ring { 
+    border-radius: 30px;
+    height: 18px;
+    width: 18px;       
+    animation: pulsate 1s ease-out;
+    animation-iteration-count: infinite; 
+    /*opacity: 0.0*/
+}
+
+@keyframes pulsate {
+        0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
+        50% {opacity: 1.0;}
+        100% {-webkit-transform: scale(1.2, 1.2); opacity: 0.0;}
+}
