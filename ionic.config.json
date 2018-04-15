@@ -1,6 +1,6 @@
 {
   "name": "ticaccio",
-  "app_id": "395e1be8",
+  "app_id": "39bfdeff",
   "type": "ionic-angular",
   "integrations": {
     "cordova": {}

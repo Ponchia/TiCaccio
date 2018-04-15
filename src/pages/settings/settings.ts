@@ -92,7 +92,7 @@ export class SettingsPage {
     this.localNotifications.schedule({
       id: 1,
       text: this.emergencySMS.message,
-      sticky: true,
+      // sticky: true,
       actions: [
         { id: 'yes', title: 'Invia il messaggio' },
         // { id: 'no', title: 'Cencella la notifica' }
