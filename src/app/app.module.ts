@@ -26,9 +26,18 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { NewsPage } from '../pages/news/news';
 import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
+import { LawsPage } from '../pages/laws/laws';
+import { LawDetailsPage } from '../pages/law-details/law-details';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+
+
+import { HttpClientModule } from '@angular/common/http';
+import { File } from '@ionic-native/file';
+import { Http } from '@angular/http';
+
+import { DomSanitizer } from '@angular/platform-browser';
 
 const firebase = {
     apiKey: "AIzaSyAa6J57Y_YlxObfkgRqxynGIxPSmN2pvKw",
@@ -51,14 +60,17 @@ import { FcmProvider } from '../providers/fcm/fcm';
     TabsPage,
     NewsPage,
     MapPage,
-    SettingsPage
+    SettingsPage,
+    LawsPage,
+    LawDetailsPage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot(),
     AngularFireModule.initializeApp(firebase), 
-    AngularFirestoreModule
+    AngularFirestoreModule,
+    HttpClientModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -69,7 +81,9 @@ import { FcmProvider } from '../providers/fcm/fcm';
     TabsPage,
     NewsPage,
     MapPage,
-    SettingsPage
+    SettingsPage,
+    LawsPage,
+    LawDetailsPage
   ],
   providers: [
     StatusBar,
@@ -83,7 +97,9 @@ import { FcmProvider } from '../providers/fcm/fcm';
     UserLocation,
     Firebase,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
-    FcmProvider
+    FcmProvider,
+    File,
+    Http
   ]
 })
 export class AppModule {}

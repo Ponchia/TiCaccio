@@ -6,6 +6,8 @@ import { HomePage } from '../home/home';
 import { NewsPage } from '../news/news';
 import { MapPage } from '../map/map';
 import { SettingsPage } from '../settings/settings';
+import { LawsPage } from '../laws/laws';
+
 
 @Component({
   templateUrl: 'tabs.html'
@@ -18,6 +20,7 @@ export class TabsPage {
   tab4Root = NewsPage;
   tab5Root = MapPage;
   tab6Root = SettingsPage;
+  tab7Root = LawsPage;
 
   constructor() {
 

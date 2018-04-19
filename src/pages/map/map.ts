@@ -31,6 +31,16 @@ class Marker {
   }
 }
 
+class iconMarker{
+  name: string;
+  color: string;
+
+  constructor(name: string, color: string) {
+    this.name = name;
+    this.color = color;
+  }
+}
+
 @IonicPage()
 @Component({
   selector: 'page-map',
@@ -62,6 +72,7 @@ export class MapPage {
   current: any;
 
   hunting: boolean = false;
+  iconMarker: iconMarker;
 
   public watch: any;
   bg: any;
@@ -112,6 +123,8 @@ export class MapPage {
     this.markers = new Array();
     this.hunting_area = new Array();
 
+    this.iconMarker = new iconMarker("eye", "light");
+
     this.current = "";
 
     this.bg = backgroundGeolocation;
@@ -149,8 +162,13 @@ export class MapPage {
     // return;
     if (flag || this.current == "") {
       this.presentAlert();
+      this.iconMarker.name = "eye";
+      this.iconMarker.color = "light";
       return;
     }
+
+    this.iconMarker.name = "eye-off";
+    this.iconMarker.color = "danger";
 
     this.hunting = true;
 
@@ -193,9 +211,7 @@ export class MapPage {
         frequency: e,
         enableHighAccuracy: true
       };
-
       this.watch = this.geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
-        console.log("Watch Position: " + position);
         this.lat = position.coords.latitude;
         this.lng = position.coords.longitude;
         this.currentPosition.setLatLng(leaflet.latLng(position.coords.latitude, position.coords.longitude));
@@ -203,7 +219,6 @@ export class MapPage {
         if (this.hunting && !this.isUserInsidePolygon(this.lat, this.lng, this.current)) {
           this.vibration.vibrate(10000);
           this.nativeAudio.play('uniqueId1', () => console.log('uniqueId1 is done playing'));
-          // this.backgroundGeolocation.stop();
         }
       });
     });
@@ -336,8 +351,7 @@ export class MapPage {
     });
 
     this.currentPosition = leaflet.marker(leaflet.latLng(lat, lon), { icon: this.currentIcon }).addTo(this.map);
-    console.log("lat " + lat);
-    console.log("lon " + lon);
+
     this.hunting_area.forEach((e) => {
       leaflet.polygon(e.getLatLngs()[0], e.options).addTo(this.map);
     });
@@ -346,12 +360,6 @@ export class MapPage {
     this.map.on('click', (e) => { console.log(e.latlng) });
     this.map.on('contextmenu', (e) => { this.onMapClick(e) });
     let btn_marker = '<a class="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>'
-
-
-    leaflet.easyButton('&starf;', () => { this.presentActionSheet() }).addTo(this.map);
-    leaflet.easyButton('<img style="width:15px;" src="assets/imgs/start.png">;', () => {
-      this.startTracking();
-    }).addTo(this.map);
 
     this.storage.get('markers').then((val) => {
       if (val !== null) {
@@ -385,6 +393,15 @@ export class MapPage {
     // this.loadmarkers();
   }
 
+  setToCurrentLocation(){
+    this.userLocation.getCurrentPosition().then((e) => {
+
+      this.currentPosition.setLatLng(leaflet.latLng(e.lat, e.lng));
+      this.map.setView(leaflet.latLng(e.lat, e.lng), 20);
+      this.lat = e.lat;
+      this.lng = e.lng;
+    });
+  }
 
   isMarkerInsidePolygon(marker, poly) {
     let polyPoints = poly.getLatLngs()[0];
@@ -429,30 +446,25 @@ export class MapPage {
       buttons: [
         {
           text: 'Deer',
-          // role: 'destructive',
           handler: () => {
-            console.log('deer');
             this.selected = this.deer;
           }
         },
         {
           text: 'Boar',
           handler: () => {
-            console.log('Archive clicked');
             this.selected = this.boar;
           }
         },
         {
           text: 'Normal',
           handler: () => {
-            console.log('Archive clicked');
           }
         },
         {
           text: 'Cancel',
           role: 'cancel',
           handler: () => {
-            console.log('Cancel clicked');
           }
         }
       ]
@@ -463,8 +475,8 @@ export class MapPage {
 
   presentAlert() {
     let alert = this.alertCtrl.create({
-      title: 'Low battery',
-      subTitle: 'Not inside a hunting area',
+      title: 'Not inside an hunting area',
+      subTitle: 'Go inside one before activating the monitoring',
       buttons: ['Dismiss']
     });
     alert.present();
