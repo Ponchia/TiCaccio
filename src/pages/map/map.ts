@@ -17,7 +17,9 @@ import { Storage } from '@ionic/storage';
 import { UserLocation } from '../../providers/userLocation/userLocation';
 
 import * as leaflet from 'leaflet';
-import 'leaflet-easybutton';
+import 'leaflet-offline';
+
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 
 class Marker {
   lat: number;
@@ -79,6 +81,8 @@ export class MapPage {
 
   currentPosition: any;
 
+  direction: any = "";
+
   constructor(public navCtrl: NavController,
     public navParams: NavParams, private geolocation: Geolocation,
     public actionSheetCtrl: ActionSheetController, platform: Platform,
@@ -87,7 +91,8 @@ export class MapPage {
     private nativeAudio: NativeAudio,
     private vibration: Vibration,
     private storage: Storage,
-    private userLocation: UserLocation) {
+    private userLocation: UserLocation,
+    private deviceOrientation: DeviceOrientation) {
     this.deer = leaflet.icon({
       // iconUrl: '../../assets/icon/Marker/Deer.ico',
       iconUrl: 'assets/icon/Marker/Deer.ico',
@@ -117,7 +122,11 @@ export class MapPage {
 
 
     platform.ready().then(() => {
-
+      let subscription = this.deviceOrientation.watchHeading().subscribe(
+        (data: DeviceOrientationCompassHeading) => {
+          this.direction = "rotate(" + data.trueHeading + "deg)";
+        }
+      );
     });
 
     this.markers = new Array();
@@ -128,8 +137,6 @@ export class MapPage {
     this.current = "";
 
     this.bg = backgroundGeolocation;
-
-    this.nativeAudio.preloadSimple('uniqueId1', 'assets/sound/alarm.mp3'); //.then(onSuccess, onError);
   }
 
   startTracking() {
@@ -176,16 +183,23 @@ export class MapPage {
     this.userLocation.getFgFrequency().then((e) => {
 
       let config: BackgroundGeolocationConfig = {
-        desiredAccuracy: 10,
-        stationaryRadius: 0,
-        distanceFilter: 0,
+        desiredAccuracy: 0,
+        stationaryRadius: 1,
+        distanceFilter: 1,
+        notificationTitle: 'TiCaccio is tracking you',
+        notificationText: 'you know it, right?',
+        // stopOnTerminate: true,
         debug: true,
-        interval: e
+        interval: 200,
+        fastestInterval: 120000,
+        activitiesInterval: 200,
       };
 
       this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
 
         console.log('BackgroundGeolocation:  ' + location.latitude + ',' + location.longitude);
+        // this.vibration.vibrate(10000);
+        // this.nativeAudio.play('uniqueId1', () => console.log('uniqueId1 is done playing', (e) => console.log("Error", e)));
         this.lat = location.latitude;
         this.lng = location.longitude;
 
@@ -193,7 +207,8 @@ export class MapPage {
 
         if (!this.isUserInsidePolygon(this.lat, this.lng, this.current)) {
           this.vibration.vibrate(10000);
-          this.nativeAudio.play('uniqueId1', () => console.log('uniqueId1 is done playing'));
+          this.nativeAudio.play('uniqueId1', () => console.log('uniqueId1 is done playing', (e) => console.log("Error", e)));
+          console.log("played!");
           // this.backgroundGeolocation.stop();
         }
 
@@ -208,7 +223,7 @@ export class MapPage {
   startWatch() {
     this.userLocation.getFgFrequency().then((e) => {
       let options = {
-        frequency: e,
+        timeout: e,
         enableHighAccuracy: true
       };
       this.watch = this.geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
@@ -336,10 +351,31 @@ export class MapPage {
   loadmap(lat, lon) {
     this.map.setView(leaflet.latLng(lat, lon), 20);
 
-    leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-      subdomains: ['a', 'b', 'c']
-    }).addTo(this.map);
+    // leaflet.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //   attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    //   subdomains: ['a', 'b', 'c']
+    // }).addTo(this.map);
+    let tilesDb = {
+        getItem: function (key) {
+            // return Promise that has the image Blob/File/Stream.
+        },
+    
+        saveTiles: function (tileUrls) {
+            // return Promise.
+        },
+    
+        clear: function () {
+            // return Promise.
+        }
+    };
+
+    leaflet.tileLayer.offline('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', tilesDb, {
+        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+        subdomains: 'abc',
+        minZoom: 13,
+        maxZoom: 19,
+        crossOrigin: true
+    });
 
     var cssIcon = leaflet.divIcon({
       // Specify a class name we can refer to in CSS.
@@ -394,13 +430,13 @@ export class MapPage {
   }
 
   setToCurrentLocation(){
-    this.userLocation.getCurrentPosition().then((e) => {
+    // this.userLocation.getCurrentPosition().then((e) => {
 
-      this.currentPosition.setLatLng(leaflet.latLng(e.lat, e.lng));
-      this.map.setView(leaflet.latLng(e.lat, e.lng), 20);
-      this.lat = e.lat;
-      this.lng = e.lng;
-    });
+    //   this.currentPosition.setLatLng(leaflet.latLng(e.lat, e.lng));
+    //   this.map.setView(leaflet.latLng(e.lat, e.lng), 20);
+    //   this.lat = e.lat;
+    //   this.lng = e.lng;
+    // });
   }
 
   isMarkerInsidePolygon(marker, poly) {

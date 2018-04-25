@@ -1,4 +1,3 @@
-// import { UserLocation } from './../../providers/userLocation/userLocation';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, Platform } from 'ionic-angular';
 
@@ -13,6 +12,8 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 // import { AngularFireModule } from 'angularfire2';
 // import { AngularFireDatabase } from 'angularfire2/database';
 import { FcmProvider } from '../../providers/fcm/fcm';
+
+import { IntroductionSlidesPage } from '../introduction-slides/introduction-slides';
 
 class SMS_class {
   message: string;
@@ -166,18 +167,13 @@ export class SettingsPage {
   }
 
   sendMessage(){
-    //Check if message is already set
     if(this.emergencySMS.enableGPS){
-      this.userLocation.getCurrentPosition().then((e) => {
-        console.log(e);
+        let location = this.userLocation.getCurrentPosition();
         this.localNotifications.on('yes', (notification, eopts) => { 
-          // console.log("GPS enabled!");
-          this.sms.send(this.emergencySMS.number, this.emergencySMS.message + ".\nLatitude: " + e.lat + "\nLongitude: " + e.lng); 
+          this.sms.send(this.emergencySMS.number, this.emergencySMS.message + ".\nLatitude: " + location.lat + "\nLongitude: " + location.lng); 
         });
-      });
     } else {
       this.localNotifications.on('yes', (notification, eopts) => { 
-        // console.log("GPS not enabled");
         this.sms.send(this.emergencySMS.number, this.emergencySMS.message ); 
       });
     }
@@ -186,6 +182,9 @@ export class SettingsPage {
   showNotification() {
   }
 
+  showIntroduction(){
+    this.navCtrl.setRoot(IntroductionSlidesPage);
+  }
   loadNotification() {
     //check is the notification is already active, if so disable it
     this.localNotifications.clearAll();

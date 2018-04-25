@@ -21,6 +21,10 @@ page-map {
     /*opacity: 0.0*/
 }
 
+#direction{
+    transform: rotate(20deg);
+}
+
 @keyframes pulsate {
         0% {-webkit-transform: scale(0.1, 0.1); opacity: 0.0;}
         50% {opacity: 1.0;}

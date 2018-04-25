@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
 import { BackgroundGeolocation, BackgroundGeolocationConfig, BackgroundGeolocationResponse } from '@ionic-native/background-geolocation';
 import { Geolocation, Geoposition } from '@ionic-native/geolocation';
+import { Events } from 'ionic-angular';
 
 import { Storage } from '@ionic/storage';
 
 @Injectable()
 export class UserLocation {
-
-    // public geolocation: Geolocation;
     lat: number;
     lng: number;
 
     bgFrequency: number;
     fgFrequency: number;
 
-    constructor(private geolocation: Geolocation, private storage: Storage) {
+    hunting: boolean = false;
+
+    current_area: any;
+
+    constructor(private geolocation: Geolocation, private storage: Storage, 
+        public backgroundGeolocation: BackgroundGeolocation, public events: Events) {
         this.storage.get('bgFrequency').then((freq) => {
             if (freq) {
                 this.bgFrequency = freq;
@@ -35,12 +39,46 @@ export class UserLocation {
 
         this.fgFrequency = -1;
         this.bgFrequency = -1;
+
+        this.configBG();
+        this.startWatch();
     }
 
-    async getCurrentPosition() {
-        const resp = await this.geolocation.getCurrentPosition()
-        this.lat = resp.coords.latitude;
-        this.lng = resp.coords.longitude;
+
+    startWatch(){
+        this.backgroundGeolocation.start();
+    }
+
+    stopWatch(){
+        this.backgroundGeolocation.stop();
+    }
+
+    configBG(){
+        let config: BackgroundGeolocationConfig = {
+            desiredAccuracy: 0,
+            stationaryRadius: 0,
+            distanceFilter: 0,
+            notificationTitle: 'TiCaccio is tracking you',
+            notificationText: 'you know it, right?',
+            debug: true
+          };
+    
+          this.backgroundGeolocation.configure(config).subscribe((location: BackgroundGeolocationResponse) => {
+    
+            this.lat = location.latitude;
+            this.lng = location.longitude;
+
+            if(this.hunting && !(this.isUserInsidePolygon(this.lat, this.lng, this.current_area))){
+                this.events.publish('outside');
+                this.hunting = false;
+            }  
+
+            this.events.publish('newLocation', location);
+          });
+
+    }
+
+    getCurrentPosition() {
         return { lat: this.lat, lng: this.lng }
     }
 
@@ -83,4 +121,22 @@ export class UserLocation {
             return this.fgFrequency;
         }
     }
+
+    isUserInsidePolygon(lat, lng, poly) {
+        let polyPoints = poly._latlngs[0];
+        let x = lat, y = lng;
+    
+        let inside = false;
+        for (let i = 0, j = polyPoints.length - 1; i < polyPoints.length; j = i++) {
+          let xi = polyPoints[i].lat, yi = polyPoints[i].lng;
+          let xj = polyPoints[j].lat, yj = polyPoints[j].lng;
+    
+          let intersect = ((yi > y) != (yj > y))
+            && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+          if (intersect) inside = !inside;
+        }
+    
+        return inside;
+      };
+
 }

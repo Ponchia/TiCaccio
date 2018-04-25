@@ -10,7 +10,7 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { SMS } from '@ionic-native/sms';
-
+import { DeviceOrientation, DeviceOrientationCompassHeading } from '@ionic-native/device-orientation';
 
 import { Firebase } from '@ionic-native/firebase';
 import { AngularFireModule } from 'angularfire2';
@@ -28,6 +28,7 @@ import { MapPage } from '../pages/map/map';
 import { SettingsPage } from '../pages/settings/settings';
 import { LawsPage } from '../pages/laws/laws';
 import { LawDetailsPage } from '../pages/law-details/law-details';
+import { IntroductionSlidesPage } from '../pages/introduction-slides/introduction-slides';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -62,7 +63,8 @@ import { FcmProvider } from '../providers/fcm/fcm';
     MapPage,
     SettingsPage,
     LawsPage,
-    LawDetailsPage
+    LawDetailsPage,
+    IntroductionSlidesPage
   ],
   imports: [
     BrowserModule,
@@ -83,7 +85,8 @@ import { FcmProvider } from '../providers/fcm/fcm';
     MapPage,
     SettingsPage,
     LawsPage,
-    LawDetailsPage
+    LawDetailsPage,
+    IntroductionSlidesPage
   ],
   providers: [
     StatusBar,
@@ -99,7 +102,8 @@ import { FcmProvider } from '../providers/fcm/fcm';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     FcmProvider,
     File,
-    Http
+    Http,
+    DeviceOrientation
   ]
 })
 export class AppModule {}
